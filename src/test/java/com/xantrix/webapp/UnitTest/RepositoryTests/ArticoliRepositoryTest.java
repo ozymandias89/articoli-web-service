@@ -5,12 +5,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import com.xantrix.webapp.articoliwebservice.Application;
+import com.xantrix.webapp.Application;
+import com.xantrix.webapp.entities.Articoli;
+import com.xantrix.webapp.repository.ArticoliRepository;
 
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;

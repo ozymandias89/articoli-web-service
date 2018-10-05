@@ -1,11 +1,10 @@
 package com.xantrix.webapp.UnitTest.RepositoryTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import com.xantrix.webapp.articoliwebservice.Application;
+ 
+import com.xantrix.webapp.Application;
+import com.xantrix.webapp.entities.Barcode;
+import com.xantrix.webapp.repository.BarcodeRepository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +24,7 @@ public class BarcodeRepositoryTest
 	@Test
 	public void TestfindByBarcode()
 	{
-		assertThat(
-				barcodeRepository.findByBarcode("8008490000021"))
+		assertThat(barcodeRepository.findByBarcode("8008490000021"))
 		.extracting(Barcode::getBarcode)
 		.containsOnly("8008490000021", "8008490000021");
 	}

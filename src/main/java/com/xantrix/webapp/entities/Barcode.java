@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import lombok.Data;
+//import lombok.Data;
 
 @Entity
 @Table(name = "BARCODE")
