@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.xantrix.webapp.entities.Articoli;
@@ -47,9 +52,16 @@ public class ArticoliController
 	@Autowired
 	private ResourceBundleMessageSource errMessage;
 	
-	// ------------------- Ricerca Per Barcode ------------------------------------
+	@ApiOperation(
+		      value = "Ricerca l'articolo per codice a barre", 
+		      notes = "Restituisce i dati dell'articolo in formato JSON",
+		      response = Articoli.class, 
+		      produces = "application/json")
+	@ApiResponses(value =
+	{ @ApiResponse(code = 200, message = "Articolo Trovato"),
+	  @ApiResponse(code = 404, message = "Articolo Non Trovato")})
 	@RequestMapping(value = "/cerca/ean/{barcode}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Articoli> listArtByEan(@PathVariable("barcode") String Barcode)
+	public ResponseEntity<Articoli> listArtByEan(@ApiParam("Barcode univoco dell'articolo") @PathVariable("barcode") String Barcode)
 		throws NotFoundException	 
 	{
 		logger.info("****** Otteniamo l'articolo con barcode " + Barcode + " *******");
