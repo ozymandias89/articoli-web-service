@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.xantrix.webapp.entities.Articoli;
 import com.xantrix.webapp.entities.Barcode;
+import com.xantrix.webapp.exception.BindingException;
+import com.xantrix.webapp.exception.DuplicateException;
 import com.xantrix.webapp.exception.NotFoundException;
 import com.xantrix.webapp.service.ArticoliService;
 import com.xantrix.webapp.service.BarcodeService;
@@ -41,6 +43,9 @@ public class ArticoliController
 
 	@Autowired
 	private ArticoliService articoliService;
+
+	@Autowired
+	private ResourceBundleMessageSource errMessage;
 	
 	// ------------------- Ricerca Per Barcode ------------------------------------
 	@RequestMapping(value = "/cerca/ean/{barcode}", method = RequestMethod.GET, produces = "application/json")
@@ -135,6 +140,125 @@ public class ArticoliController
 
 		return new ResponseEntity<List<Articoli>>(articoli, HttpStatus.OK);
 	}
+
+	// ------------------- INSERIMENTO ARTICOLO ------------------------------------
+	@RequestMapping(value = "/inserisci", method = RequestMethod.POST)
+	public ResponseEntity<Articoli> createArt(@Valid @RequestBody Articoli articolo, BindingResult bindingResult,
+			UriComponentsBuilder ucBuilder) 
+			throws BindingException, DuplicateException
+	{
+		logger.info("Salviamo l'articolo con codice " + articolo.getCodArt());
+		
+		if (bindingResult.hasErrors())
+		{
+			String MsgErr = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
+			
+			logger.warn(MsgErr);
+
+			throw new BindingException(MsgErr);
+		}
+		 
+		//Disabilitare se si vuole gestire anche la modifica 
+		Articoli checkArt =  articoliService.SelByCodArt(articolo.getCodArt());
+
+		if (checkArt != null)
+		{
+			String MsgErr = String.format("Articolo %s presente in anagrafica! "
+					+ "Impossibile utilizzare il metodo POST", articolo.getCodArt());
+			
+			logger.warn(MsgErr);
+			
+			throw new DuplicateException(MsgErr);
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		ObjectMapper mapper = new ObjectMapper();
+		
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		ObjectNode responseNode = mapper.createObjectNode();
+
+		articoliService.InsArticolo(articolo);
+		
+		responseNode.put("code", HttpStatus.OK.toString());
+		responseNode.put("message", "Inserimento Articolo " + articolo.getCodArt() + " Eseguita Con Successo");
+
+		return new ResponseEntity<Articoli>(headers, HttpStatus.CREATED);
+	}
+
+	// ------------------- MODIFICA ARTICOLO ------------------------------------
+	@RequestMapping(value = "/modifica", method = RequestMethod.PUT)
+	public ResponseEntity<Articoli> updateArt(@Valid @RequestBody Articoli articolo, BindingResult bindingResult,
+				UriComponentsBuilder ucBuilder) throws BindingException,NotFoundException  
+	{
+		logger.info("Modifichiamo l'articolo con codice " + articolo.getCodArt());
+		
+		if (bindingResult.hasErrors())
+		{
+			String MsgErr = errMessage.getMessage(bindingResult.getFieldError(), LocaleContextHolder.getLocale());
+			
+			logger.warn(MsgErr);
+
+			throw new BindingException(MsgErr);
+		}
+		
+		Articoli checkArt =  articoliService.SelByCodArt(articolo.getCodArt());
+
+		if (checkArt == null)
+		{
+			String MsgErr = String.format("Articolo %s non presente in anagrafica! "
+					+ "Impossibile utilizzare il metodo PUT", articolo.getCodArt());
+			
+			logger.warn(MsgErr);
+			
+			throw new NotFoundException(MsgErr);
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		ObjectMapper mapper = new ObjectMapper();
+		
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		ObjectNode responseNode = mapper.createObjectNode();
+
+		articoliService.InsArticolo(articolo);
+		
+		responseNode.put("code", HttpStatus.OK.toString());
+		responseNode.put("message", "Modifica Articolo " + articolo.getCodArt() + " Eseguita Con Successo");
+
+		return new ResponseEntity<Articoli>(headers, HttpStatus.CREATED);
+	}
     
-   
+   // ------------------- ELIMINAZIONE ARTICOLO ------------------------------------
+	@RequestMapping(value = "/elimina/{codart}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteArt(@PathVariable("codart") String CodArt)
+			throws  NotFoundException 
+	{
+		logger.info("Eliminiamo l'articolo con codice " + CodArt);
+
+		HttpHeaders headers = new HttpHeaders();
+		ObjectMapper mapper = new ObjectMapper();
+
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		ObjectNode responseNode = mapper.createObjectNode();
+
+		Articoli articolo = articoliService.SelByCodArt(CodArt);
+
+		if (articolo == null)
+		{
+			String MsgErr = String.format("Articolo %s non presente in anagrafica! ",CodArt);
+			
+			logger.warn(MsgErr);
+			
+			throw new NotFoundException(MsgErr);
+		}
+
+		articoliService.DelArticolo(articolo);
+
+		responseNode.put("code", HttpStatus.OK.toString());
+		responseNode.put("message", "Eliminazione Articolo " + CodArt + " Eseguita Con Successo");
+
+		return new ResponseEntity<>(responseNode, headers, HttpStatus.OK);
+	}
 }
