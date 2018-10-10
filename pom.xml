@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>articoli-web-service</name>
+	<description>Microservice Gestione Articoli</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -60,12 +60,17 @@
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.9.2</version>
 		</dependency>
+
+		<!-- CACHE -->
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-cache</artifactId>
+    	</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

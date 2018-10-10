@@ -3,6 +3,7 @@ package com.xantrix.webapp.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +26,14 @@ public class ArticoliServiceImpl implements ArticoliService
 	}
 
 	@Override
+	@Cacheable("SelByDescrizione")
 	public List<Articoli> SelByDescrizione(String descrizione, Pageable pageable)
 	{
 		return articoliRepository.findByDescrizioneLike(descrizione, pageable);
 	}
 
 	@Override
+	@Cacheable("SelByDescrizione")
 	public List<Articoli> SelByDescrizione(String descrizione)
 	{
 		return articoliRepository.findByDescrizioneLike(descrizione);
