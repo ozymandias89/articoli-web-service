@@ -21,11 +21,13 @@ public class BarcodeRepositoryTest
 	@Autowired
 	private BarcodeRepository barcodeRepository;
 	
+	
 	@Test
 	public void TestfindByBarcode()
 	{
 		assertThat(barcodeRepository.findByBarcode("8008490000021"))
 		.extracting(Barcode::getBarcode)
-		.containsOnly("8008490000021", "8008490000021");
+		.isEqualTo("8008490000021");
 	}
+	
 }

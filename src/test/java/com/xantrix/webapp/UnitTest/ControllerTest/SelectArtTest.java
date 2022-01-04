@@ -17,15 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
- 
-
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @ContextConfiguration(classes = Application.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -51,7 +50,7 @@ private MockMvc mockMvc;
 			"    \"codStat\": \"\",\n" + 
 			"    \"pzCart\": 6,\n" + 
 			"    \"pesoNetto\": 1.5,\n" + 
-			"    \"idStatoArt\": \"1\",\n" + 
+			"    \"idStatoArt\": \"1 \",\n" + 
 			"    \"dataCreaz\": \"2010-06-14\",\n" + 
 			"    \"barcode\": [\n" + 
 			"        {\n" + 
@@ -71,13 +70,10 @@ private MockMvc mockMvc;
 			"    }\n" + 
 			"}";
 	
-	/*
-	 * 
-	 */
 	@Test
 	public void A_listArtByEan() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.get("/articoli//cerca/ean/8008490000021")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/articoli/cerca/ean/8008490000021")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -95,7 +91,7 @@ private MockMvc mockMvc;
 				.andExpect(jsonPath("$.pesoNetto").exists())
 				.andExpect(jsonPath("$.pesoNetto").value("1.5"))
 				.andExpect(jsonPath("$.idStatoArt").exists())
-				.andExpect(jsonPath("$.idStatoArt").value("1"))
+				.andExpect(jsonPath("$.idStatoArt").value("1 "))
 				.andExpect(jsonPath("$.dataCreaz").exists())
 				.andExpect(jsonPath("$.dataCreaz").value("2010-06-14"))
 				 //barcode
@@ -124,9 +120,9 @@ private MockMvc mockMvc;
 	private String Barcode = "8008490002138";
 	
 	@Test
-	public void AA_ErrlistArtByEan() throws Exception
+	public void B_ErrlistArtByEan() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.get("/articoli/cerca/ean/" + Barcode)
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/articoli/cerca/ean/" + Barcode)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(JsonData)
 				.accept(MediaType.APPLICATION_JSON))
@@ -137,9 +133,9 @@ private MockMvc mockMvc;
 	}
 	
 	@Test
-	public void B_listArtByCodArt() throws Exception
+	public void C_listArtByCodArt() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.get("/articoli/cerca/codice/002000301")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/articoli/cerca/codice/002000301")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -150,9 +146,9 @@ private MockMvc mockMvc;
 	private String CodArt = "002000301b";
 	
 	@Test
-	public void BB_ErrlistArtByCodArt() throws Exception
+	public void D_ErrlistArtByCodArt() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.get("/articoli/cerca/codice/" + CodArt)
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/articoli/cerca/codice/" + CodArt)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(JsonData)
 				.accept(MediaType.APPLICATION_JSON))
@@ -165,9 +161,9 @@ private MockMvc mockMvc;
 	private String JsonData2 = "[" + JsonData + "]";
 
 	@Test
-	public void C_listArtByDesc() throws Exception
+	public void E_listArtByDesc() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.get("/articoli/cerca/descrizione/ACQUA ULIVETO 15 LT")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/articoli/cerca/descrizione/ACQUA ULIVETO 15 LT")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)))

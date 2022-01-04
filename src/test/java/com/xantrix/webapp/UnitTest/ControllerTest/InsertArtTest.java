@@ -58,7 +58,7 @@ public class InsertArtTest
 	@Test
 	public void A_testInsArticolo() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.post("/articoli/inserisci")
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/articoli/inserisci")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(JsonData)
 				.accept(MediaType.APPLICATION_JSON))
@@ -69,7 +69,7 @@ public class InsertArtTest
 	@Test
 	public void B_testErrInsArticolo() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.post("/articoli/inserisci")
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/articoli/inserisci")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(JsonData)
 				.accept(MediaType.APPLICATION_JSON))
@@ -97,7 +97,7 @@ public class InsertArtTest
 	@Test
 	public void C_testErrInsArticolo() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.post("/articoli/inserisci")
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/articoli/inserisci")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(ErrJsonData)
 				.accept(MediaType.APPLICATION_JSON))
@@ -110,7 +110,7 @@ public class InsertArtTest
 	@Test
 	public void D_testUpdArticolo() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.put("/articoli/modifica")
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/articoli/modifica")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(JsonData)
 				.accept(MediaType.APPLICATION_JSON))
@@ -121,10 +121,10 @@ public class InsertArtTest
 	@Test
 	public void E_testDelArticolo() throws Exception
 	{
-		mockMvc.perform(MockMvcRequestBuilders.delete("/articoli/elimina/123Test")
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/articoli/elimina/123Test")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.code").value(200))
+				.andExpect(jsonPath("$.code").value("200 OK"))
 				.andExpect(jsonPath("$.message").value("Eliminazione Articolo 123Test Eseguita Con Successo"))
 				.andDo(print());
 	}

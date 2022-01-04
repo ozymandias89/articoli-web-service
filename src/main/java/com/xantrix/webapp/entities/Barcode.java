@@ -1,5 +1,6 @@
 package com.xantrix.webapp.entities;
 
+
 import java.io.Serializable;
 
 import javax.persistence.Column;

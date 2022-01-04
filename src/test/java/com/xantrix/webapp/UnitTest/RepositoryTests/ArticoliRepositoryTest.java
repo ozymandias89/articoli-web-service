@@ -41,11 +41,15 @@ public class ArticoliRepositoryTest
 		assertEquals(10, items.size());
 	}
 
+	
 	@Test
 	public void TestfindByCodArt() throws Exception
 	{
-		assertThat(articoliRepository.findByCodArt("002000301")).extracting(Articoli::getDescrizione)
-				.containsOnly("ACQUA ULIVETO 15 LT", "ACQUA ULIVETO 15 LT");
+		assertThat(articoliRepository.findByCodArt("002000301"))
+				.extracting(Articoli::getDescrizione)
+				.isEqualTo("ACQUA ULIVETO 15 LT");
+				
 	}
+	
 
 }
